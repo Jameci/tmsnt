@@ -1,15 +1,13 @@
-from typing import Any, Optional
 import pytorch_lightning as pl
-from pytorch_lightning.utilities.types import STEP_OUTPUT
 
 
 class Timesnet(pl.LightningModule):
     def __init__(self):
-        pass
+        super(Timesnet, self).__init__()
 
 
-    def training_step(self):
-        pass
+    def training_step(self, batch, batch_idx):
+        x, x_mask, y, y_mask = batch
 
 
     def validation_step(self):

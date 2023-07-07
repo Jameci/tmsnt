@@ -1,9 +1,10 @@
 from torch.utils.data import Dataset
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 
 class Dataset_My(Dataset):
-    def __init__(self, path=r".\data\ETTm1.csv", size=(384, 96), target=["OT"], flag="train"):
+    def __init__(self, path=r".\data\ETTm1.csv", size=(384, 96), target=["OT"], flag="train", scale=True):
         super(Dataset_My, self).__init__()
         
         self.target = target
@@ -25,6 +26,14 @@ class Dataset_My(Dataset):
         data_pd = pd.read_csv(path)
         data = data_pd[data_pd.columns[1:]]
         self.data = data[board1:board2]
+        self.data_x = self.data.values
+        self.data_y = self.data[self.target].values
+
+        self.scaler = StandardScaler()
+        if scale:
+            train_data = data[board1s[0]:board2s[0]].values
+            self.scaler.fit(train_data)
+            self.data_x = self.scaler.transform(self.data_x)
         
         stamp = data_pd[['date']][board1:board2]
         stamp['date'] = stamp['date'].map(pd.to_datetime)
@@ -34,8 +43,7 @@ class Dataset_My(Dataset):
         stamp['hour'] = stamp['date'].map(lambda x:x.hour)
         stamp['minute'] = stamp['date'].map(lambda x:x.minute // 15)
         stamp = stamp.drop(labels='date', axis=1)
-        print(stamp.shape)
-        self.stamp = stamp
+        self.stamp = stamp.values
 
 
     def __getitem__(self, index):
@@ -43,10 +51,10 @@ class Dataset_My(Dataset):
         ex = index + self.seq
         sy = ex
         ey = sy + self.pred
-        x = self.data[sx:ex].values
-        y = self.data[sy:ey][self.target].values
-        xm = self.stamp[sx:ex].values
-        ym = self.stamp[sy:ey].values
+        x = self.data_x[sx:ex]
+        y = self.data_y[sy:ey]
+        xm = self.stamp[sx:ex]
+        ym = self.stamp[sy:ey]
         return x, xm, y, ym
 
 

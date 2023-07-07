@@ -12,4 +12,11 @@ model = Timesnet()
 
 trainer = Trainer()
 
+for x, y, z, w in train_dataloader:
+    print(x)
+    print(y)
+    print(z)
+    print(w)
+    break
+
 # trainer.fit(model=model, train_dataloaders=train_dataloader, val_dataloaders=val_dataloader)
