@@ -43,10 +43,10 @@ class Dataset_My(Dataset):
         ex = index + self.seq
         sy = ex
         ey = sy + self.pred
-        x = self.data[sx:ex]
-        y = self.data[sy:ey][self.target]
-        xm = self.stamp[sx:ex]
-        ym = self.stamp[sy:ey]
+        x = self.data[sx:ex].values
+        y = self.data[sy:ey][self.target].values
+        xm = self.stamp[sx:ex].values
+        ym = self.stamp[sy:ey].values
         return x, xm, y, ym
 
 
