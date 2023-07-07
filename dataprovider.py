@@ -3,9 +3,10 @@ import pandas as pd
 
 
 class Dataset_My(Dataset):
-    def __init__(self, path=r".\data\ETTm1.csv", size=(384, 96), target="OT", flag="train"):
+    def __init__(self, path=r".\data\ETTm1.csv", size=(384, 96), target=["OT"], flag="train"):
         super(Dataset_My, self).__init__()
         
+        self.target = target
         self.seq = size[0]
         self.pred = size[1]
         
@@ -43,7 +44,7 @@ class Dataset_My(Dataset):
         sy = ex
         ey = sy + self.pred
         x = self.data[sx:ex]
-        y = self.data[sy:ey]
+        y = self.data[sy:ey][self.target]
         xm = self.stamp[sx:ex]
         ym = self.stamp[sy:ey]
         return x, xm, y, ym
