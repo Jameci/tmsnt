@@ -1,3 +1,4 @@
+import torch
 import pytorch_lightning as pl
 import torch.nn as nn
 import torch.nn.functional as F
@@ -34,7 +35,7 @@ class Timesnet(pl.LightningModule):
 
 
     def configure_optimizers(self):
-        pass
+        return torch.optim.Adam(self.parameters(), lr=1e-3)
 
 
 

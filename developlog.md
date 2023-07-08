@@ -36,7 +36,25 @@
 >
 > 调用super时，传入super()中的参数分别是类名和self，其它和构建父类有关的参数传入super的init函数里
 
+## trainingstep
 
+需要返回一个loss，看了原代码里用的是MSEloss
+
+> mesloss函数在torch.nn.functional里，一般这个包被引用时会as F
+
+然后另起了一个model，看到原代码里用了block，也准备了一个block的框架在这里
+
+> 一般模型需要继承torch.nn.model
+
+forward是nn.model用于前向传播的关键函数，由于我不知道该怎么利用y，所以只取了x和x_mark作为输入
+
+有了forward，trainingstep就可以填坑了
+
+## optimizer
+
+直接使用最经典的torch.optim.Adam(self.parameters(), lr=1e-3)
+
+> self.parameters()是怎么获取参数的？其实也比较简单——就遍历一下模型的子模块就可以了
 
 # main
 
