@@ -32,16 +32,22 @@ class Timesnet(pl.LightningModule):
         self.out_size = out_size
         self.model = Model(in_size=self.in_size, out_size=self.out_size)
 
-
     def training_step(self, batch, batch_idx):
         x, x_mask, y, y_mask = batch
         y_hat = self.model(x, x_mask)
-        return F.mse_loss(y_hat, y)
+        result = {
+            'loss' : F.mse_loss(y_hat, y)
+        }
+        return result
 
+    def validation_step(self, batch, batch_idx):
+        x, x_mask, y, y_mask = batch
+        y_hat = self.model(x, x_mask)
 
-    def validation_step(self):
-        pass
-
+        result = {
+            'val_loss' : F.mse_loss(y_hat, y)
+        }
+        return result
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=1e-3)
