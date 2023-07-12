@@ -1,6 +1,7 @@
 from torch.utils.data import Dataset
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+import torch
 
 
 class Dataset_My(Dataset):
@@ -51,15 +52,19 @@ class Dataset_My(Dataset):
         ex = index + self.seq
         sy = ex
         ey = sy + self.pred
-        x = self.data_x[sx:ex]
-        y = self.data_y[sy:ey]
-        xm = self.stamp[sx:ex]
-        ym = self.stamp[sy:ey]
+        x = torch.Tensor(self.data_x[sx:ex])
+        y = torch.Tensor(self.data_y[sy:ey])
+        xm = torch.Tensor(self.stamp[sx:ex])
+        ym = torch.Tensor(self.stamp[sy:ey])
         return x, xm, y, ym
 
 
     def __len__(self):
         return len(self.data) - self.pred - self.seq + 1
+    
+
+    def get_size(self):
+        return (self.seq, self.data_x.shape[-1]), (self.pred, self.data_y.shape[-1])
 
 if __name__ == "__main__":
     dataset = Dataset_My()

@@ -2,14 +2,6 @@
 
 实现了一个dataset，能够读入csv数据，根据size进行滑动窗口切割
 
-> 记住常用包的位置：dataset和dataloader在torch.utils.data下
->
-> 还有pandas的用法，读出csv后，怎么获取行(.column)，怎么裁剪指定行/列(第一维是行，第二维是列)，怎么增加/删除行(drop(column=, axis=))
->
-> map函数怎么用(.map(函数表达式))
->
-> lambda表达式怎么理解
-
 关于怎么做normalization，我纠结了一段时间，原因是timesnet代码中使用了train部分的数据去得到了scaler，之后用这个scaler去transform了全部的数据，无论输入数据x还是输出数据y
 
 这不太符合常识，所以我决定走一条不一样的路，我只拿train部分的scaler去transform输入x，对输出y不做处理
@@ -49,6 +41,46 @@
 forward是nn.model用于前向传播的关键函数，由于我不知道该怎么利用y，所以只取了x和x_mark作为输入
 
 有了forward，trainingstep就可以填坑了
+
+### nn.model
+
+#### forward
+
+在正式填坑之前，想到先用一个线性层测试一下
+
+> nn.Linear()只能在一个维度上进行处理，如果输入是高维的话，必须保证输入的最后一维和给出的输入size一致
+
+验证通过了……
+
+看了一下第一步是要对输入进行normalization，真的需要吗，我先省了
+
+##### embedding
+
+第二步是embedding，看了一下embedding所需要的函数，好多啊
+
+仔细分析下，embedding所调用的是Data_Embedding，一共做了四件事
+
+用value_embedding，temporal_embedding，position_embedding处理了x和x_mark
+
+将上述处理结果相加并dropoout
+
+所有的embedding都是把输入数据从(batch, seq, feature)变为(batch, seq, dmodel)
+
+feature是输入特征的维度，dmodel默认是512，这里好像改成了64
+
+###### value_embedding
+
+仅仅是把x拿过来，在时间维度上做了一个一维的卷积，我也会
+
+###### position_embedding
+
+position返回的值只和输入的尺寸有关，和输入的具体值无关，具体原因写在飞书文档里了
+
+###### temporal_embedding
+
+对x_mark作的，用的是position_embedding的方法
+
+最后实现一个大的embedding，把它们合在一起
 
 ## optimizer
 
