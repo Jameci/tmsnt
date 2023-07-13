@@ -16,13 +16,14 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.in_size = in_size
         self.out_size = out_size
-        self.l1 = nn.Sequential(nn.Linear(in_size[0] * 64, out_size[0] * out_size[1]))
+        self.l1 = nn.Sequential(nn.Linear(out_size[0] * 64, out_size[0] * out_size[1]))
         self.embedding = DataEmbedding(c_in=in_size[-1])
-    
+        self.predict_linear = nn.Linear(in_size[0], out_size[0])
+
     def forward(self, x, x_mark):
         x = self.embedding(x, x_mark)
-        print(x.dtype)
-        y = self.l1(x.reshape(-1, self.in_size[0] * 64))
+        x = self.predict_linear(x.permute(0, 2, 1)).permute(0, 2, 1)
+        y = self.l1(torch.flatten(x, start_dim=1))
         return y.reshape(-1, self.out_size[0], self.out_size[1])
 
 
@@ -41,10 +42,6 @@ class Timesnet(pl.LightningModule):
         result = {
             'loss' : loss
         }
-        f = open("temp.txt", "a+")
-        f.write("loss:")
-        f.write(str(loss))
-        f.close()
         return result
 
     def validation_step(self, batch, batch_idx):
@@ -55,10 +52,6 @@ class Timesnet(pl.LightningModule):
         result = {
             'val_loss' : loss
         }
-        f = open("temp.txt", "a+")
-        f.write("val_loss:")
-        f.write(str(loss))
-        f.close()
         return result
 
     def configure_optimizers(self):
