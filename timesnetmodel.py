@@ -1,3 +1,4 @@
+from typing import Any
 import torch
 import pytorch_lightning as pl
 import torch.nn as nn
@@ -40,6 +41,10 @@ class Timesnet(pl.LightningModule):
         result = {
             'loss' : loss
         }
+        f = open("temp.txt", "a+")
+        f.write("loss:")
+        f.write(str(loss))
+        f.close()
         return result
 
     def validation_step(self, batch, batch_idx):
@@ -50,9 +55,14 @@ class Timesnet(pl.LightningModule):
         result = {
             'val_loss' : loss
         }
+        f = open("temp.txt", "a+")
+        f.write("val_loss:")
+        f.write(str(loss))
+        f.close()
         return result
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=1e-3)
 
-
+    def forward(self, x, x_mark):
+        return self.model(x, x_mark)

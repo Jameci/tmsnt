@@ -64,7 +64,7 @@ class Dataset_My(Dataset):
     
 
     def get_size(self):
-        return (self.seq, self.data_x.shape[-1]), (self.pred, self.data_y.shape[-1])
+        return (self.seq, self.data_x.shape[-1]), (self.seq, self.stamp.shape[-1]), (self.pred, self.data_y.shape[-1]), (self.pred, self.stamp.shape[-1])
 
 if __name__ == "__main__":
     dataset = Dataset_My()
