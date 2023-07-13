@@ -14,14 +14,14 @@ val_dataset = Dataset_My(flag="val")
 train_dataloader = DataLoader(batch_size=128, shuffle=False, dataset=train_dataset)
 val_dataloader = DataLoader(batch_size=128, shuffle=False, dataset=val_dataset)
 
-in_size, in_mark, out_size, out_mark = train_dataset.get_size()
+seq, pred, fin, fout, fin_m, fout_m = train_dataset.get_size()
 
-model = Timesnet(in_size=in_size, out_size=out_size)
+model = Timesnet(seq=seq, pred=pred, fin=fin, fout=fout)
 
 trainer = Trainer(logger=logger, max_epochs=15)
 
 trainer.fit(model=model, train_dataloaders=train_dataloader, val_dataloaders=val_dataloader)
 
-sameple_in = torch.zeros(1, in_size[0], in_size[1])
-sameple_in_mark = torch.zeros(1, in_mark[0], in_mark[1])
+sameple_in = torch.zeros(1, seq, fin)
+sameple_in_mark = torch.zeros(1, seq, fin_m)
 writer.add_graph(model, (sameple_in, sameple_in_mark))
