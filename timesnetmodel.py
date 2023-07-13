@@ -35,17 +35,20 @@ class Timesnet(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, x_mask, y, y_mask = batch
         y_hat = self.model(x, x_mask)
+        loss = F.mse_loss(y_hat, y)
+        self.log("loss", loss)
         result = {
-            'loss' : F.mse_loss(y_hat, y)
+            'loss' : loss
         }
         return result
 
     def validation_step(self, batch, batch_idx):
         x, x_mask, y, y_mask = batch
         y_hat = self.model(x, x_mask)
-
+        loss = F.mse_loss(y_hat, y)
+        self.log("val_loss", loss)
         result = {
-            'val_loss' : F.mse_loss(y_hat, y)
+            'val_loss' : loss
         }
         return result
 
