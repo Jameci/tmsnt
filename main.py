@@ -11,8 +11,8 @@ writer = SummaryWriter(log_dir=logger.log_dir)
 
 train_dataset = Dataset_My(flag="train")
 val_dataset = Dataset_My(flag="val")
-train_dataloader = DataLoader(batch_size=128, shuffle=False, dataset=train_dataset)
-val_dataloader = DataLoader(batch_size=128, shuffle=False, dataset=val_dataset)
+train_dataloader = DataLoader(batch_size=32, shuffle=False, dataset=train_dataset)
+val_dataloader = DataLoader(batch_size=32, shuffle=False, dataset=val_dataset)
 
 seq, pred, fin, fout, fin_m, fout_m = train_dataset.get_size()
 
